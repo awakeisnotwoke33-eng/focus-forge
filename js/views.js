@@ -8,14 +8,13 @@
   // ---------- Onboarding ----------
   function onboarding(){
     const st = Store.get();
-    const profiles = ['perfectionist','overwhelmed','distracted','bored','fearful','energy'];
     const emojis = ['🦊','🐯','🦉','🐬','🐙','🦄','🐝','🐼','🦁','🐸'];
     html(`
       <section class="view onboarding">
         <div class="card hero-card">
           <h1 data-i18n="onboard.title">Willkommen bei FocusForge</h1>
           <p class="muted" data-i18n="onboard.sub">Besiege Prokrastination – bewusst und unterbewusst. Lass uns in 60 Sekunden starten.</p>
-          <p class="muted small" style="margin-top:8px">🔒 Opt-in: Deine Daten bleiben in deinem Browser. Optional: Tritt der WhatsApp-Community bei, um dich mit anderen Prokrastinierern auszutauschen.</p>
+          <p class="muted small" style="margin-top:8px">🔒 Deine Daten bleiben in deinem Browser. Kein Account nötig.</p>
           <div class="field">
             <label data-i18n="onboard.name">Wie heißt du?</label>
             <input id="obName" type="text" value="${esc(st.user.name)}" placeholder="Name" />
@@ -27,26 +26,11 @@
             </div>
           </div>
           <div class="field">
-            <label data-i18n="onboard.profile">Was ist dein Prokrastinations-Typ?</label>
-            <div class="profile-grid">
-              ${profiles.map(p=>`<button class="profile-btn ${st.user.profile===p?'selected':''}" data-profile="${p}" data-i18n="onboard.profile.${p}">${p}</button>`).join('')}
-            </div>
+            <label>⏰ Tägliche Erinnerung (optional)</label>
+            <input id="obCueTime" type="time" value="${esc(st.user.cueTime||'')}" />
+            <p class="muted small">Um diese Zeit erinnert dich die App (Browser-Benachrichtigung).</p>
           </div>
-          <div class="field">
-            <label data-i18n="onboard.goal">Was willst du diese Woche erreichen?</label>
-            <textarea id="obGoal" rows="2" placeholder="…">${esc(st.user.goal)}</textarea>
-          </div>
-          <div class="field">
-            <label>📱 Telefonnummer (optional, für WhatsApp-Community)</label>
-            <input id="obPhone" type="tel" value="${esc(st.user.phone||'')}" placeholder="+49 ..." />
-          </div>
-          <div class="field" style="display:flex;align-items:center;gap:8px">
-            <input id="obWaOptin" type="checkbox" ${st.user.waOptin?'checked':''} style="width:auto" />
-            <label for="obWaOptin" style="margin:0">Ich möchte der WhatsApp-Community beitreten</label>
-          </div>
-          <div id="waLinkBox" style="display:none;margin-bottom:12px">
-            <a id="waLink" class="btn primary small" target="_blank" rel="noopener">WhatsApp-Community beitreten</a>
-          </div>
+          <p class="muted small">Profil, Ziele und WhatsApp-Opt-in kannst du später in den Einstellungen ergänzen.</p>
           <button id="obFinish" class="btn primary big" data-i18n="onboard.finish">Los geht’s</button>
         </div>
       </section>
@@ -57,25 +41,11 @@
     document.querySelectorAll('.profile-btn').forEach(b=>{
       b.onclick=()=>{ document.querySelectorAll('.profile-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); Store.update(s=>{s.user.profile=b.dataset.profile;}); };
     });
-    // toggle whatsapp link box
-    const waCb = document.getElementById('obWaOptin');
-    const waBox = document.getElementById('waLinkBox');
-    const waLink = document.getElementById('waLink');
-    const updateWaBox = ()=>{
-      if(waCb.checked){
-        waBox.style.display='block';
-        const link = (Store.get().settings.waGroupLink) || 'https://chat.whatsapp.com/DEINEN_LINK_HIER';
-        waLink.href = link;
-      } else { waBox.style.display='none'; }
-    };
-    waCb.addEventListener('change', updateWaBox);
-    updateWaBox();
     document.getElementById('obFinish').onclick=()=>{
       const name = document.getElementById('obName').value.trim();
-      const goal = document.getElementById('obGoal').value.trim();
-      const phone = document.getElementById('obPhone').value.trim();
-      const waOptin = document.getElementById('obWaOptin').checked;
-      Store.update(s=>{ s.user.name=name; s.user.goal=goal; s.user.phone=phone; s.user.waOptin=waOptin; s.onboarded=true; });
+      const cueTime = document.getElementById('obCueTime').value.trim();
+      Store.update(s=>{ s.user.name=name; s.user.cueTime=cueTime; s.onboarded=true; if(cueTime) s.settings.reminderTime=cueTime; });
+      if(cueTime) requestNotifPermission();
       AudioFX.success();
       Confetti.burst();
       toast(t('msg.saved'));
@@ -131,6 +101,33 @@
           `}
         </div>
 
+        ${st.sessions.length>=1 ? `
+        <div class="card identity-card">
+          <div class="identity-emoji">${esc(st.user.emoji||'🦊')}</div>
+          <div>
+            <div class="identity-title">Du bist jemand, der anfängt.</div>
+            <div class="muted small">${st.sessions.length} Sessions · ${st.streak.current} Tage Streak · ${st.tasks.filter(t=>t.done).length} Aufgaben erledigt</div>
+          </div>
+        </div>` : ''}
+        ${(() => {
+          const today = todayKey();
+          const todaySessions = st.sessions.filter(s=> s.startedAt && s.startedAt.slice(0,10)===today);
+          const cueTime = st.user.cueTime || st.settings.reminderTime;
+          if(cueTime && todaySessions.length===0){
+            return `<div class="card cue-card">
+              <strong>⏰ Zeit für deine tägliche Session</strong>
+              <p class="muted small">Du hast heute noch nicht fokussiert. Ein winziger Schritt zählt.</p>
+              <button class="btn primary small" id="cueStartBtn">Jetzt 5 Min.</button>
+            </div>`;
+          }
+          if(st.streak.current===0 && st.sessions.length>0){
+            return `<div class="card cue-card">
+              <strong>💙 Gestern verpasst – heute zählt doppelt</strong>
+              <p class="muted small">Kein Problem. Selbstmitgefühl > Schuld. Ein winziger Schritt reicht.</p>
+            </div>`;
+          }
+          return '';
+        })()}
         <div class="stats-grid">
           <div class="stat-card"><div class="stat-val" id="streakVal">${st.streak.current}</div><div class="stat-label" data-i18n="home.streak">Streak</div></div>
           <div class="stat-card"><div class="stat-val">${todayMin}</div><div class="stat-label" data-i18n="home.focusTime">Fokuszeit heute</div></div>
@@ -197,6 +194,7 @@
     document.getElementById('homeStartFocus')?.addEventListener('click', ()=>{ AudioFX.click(); startFocus(one?'nextaction':'fivemin', one); });
     document.getElementById('homeMarkDone')?.addEventListener('click', ()=>{ if(one){ markTaskDone(one.id); } });
     document.getElementById('homeAddTask')?.addEventListener('click', ()=>{ App.navigate('tasks'); });
+    document.getElementById('cueStartBtn')?.addEventListener('click', ()=>{ AudioFX.click(); Store.set('_pendingFocus', { method:'fivemin', taskId: null, duration:5 }); App.navigate('focus'); });
     // daily quote rotation
     const quotes = (Store.get('lang')==='en') ? [
       'The best time was yesterday. The second best is now.',
@@ -606,6 +604,11 @@
   function insights(){
     const st = Store.get();
     const totalMin = st.sessions.reduce((a,s)=>a+(s.duration||0),0);
+    // habit strength: days active in last 14
+    const daySet = new Set();
+    const cutoff = Date.now() - 14*86400000;
+    st.sessions.forEach(s=>{ if(s.startedAt && new Date(s.startedAt).getTime()>=cutoff) daySet.add(s.startedAt.slice(0,10)); });
+    const habitStrength = Math.round((daySet.size/14)*100);
     const doneTasks = st.tasks.filter(t=>t.done).length;
     const weekStart = new Date(); weekStart.setDate(weekStart.getDate()-weekStart.getDay()); weekStart.setHours(0,0,0,0);
     const weekSessions = st.sessions.filter(s=> new Date(s.startedAt) >= weekStart);
@@ -626,6 +629,7 @@
           <div class="stat-card"><div class="stat-val">${st.wins.length}</div><div class="stat-label" data-i18n="insights.wins">Wins</div></div>
           <div class="stat-card"><div class="stat-val">Lv ${st.level}</div><div class="stat-label">Level (${st.xp} XP)</div></div>
           <div class="stat-card"><div class="stat-val">${st.badges.length}</div><div class="stat-label" data-i18n="insights.badges">Abzeichen</div></div>
+          <div class="stat-card"><div class="stat-val">${habitStrength}%</div><div class="stat-label">Gewohnheits-Stärke (14T)</div></div>
         </div>
 
         <div class="card">
@@ -771,6 +775,28 @@
             <label>WhatsApp-Community Link</label>
             <input id="setWaLink" type="text" value="${esc(s.waGroupLink||'')}" placeholder="https://chat.whatsapp.com/..." style="min-width:240px" />
           </div>
+          <div class="setting-row">
+            <label>Tägliche Erinnerung (Uhrzeit)</label>
+            <input id="setReminderTime" type="time" value="${esc(s.reminderTime||st.user.cueTime||'')}" />
+          </div>
+          <div class="setting-row">
+            <label>Prokrastinations-Typ</label>
+            <select id="setProfile">
+              ${['perfectionist','overwhelmed','distracted','bored','fearful','energy'].map(p=>`<option value="${p}" ${st.user.profile===p?'selected':''}>${p}</option>`).join('')}
+            </select>
+          </div>
+          <div class="setting-row">
+            <label>Wochenziel</label>
+            <input id="setGoal" type="text" value="${esc(st.user.goal||'')}" placeholder="Was willst du diese Woche erreichen?" style="min-width:240px" />
+          </div>
+          <div class="setting-row">
+            <label>Telefon (WhatsApp-Opt-in)</label>
+            <input id="setPhone" type="tel" value="${esc(st.user.phone||'')}" placeholder="+49 ..." />
+          </div>
+          <div class="setting-row" style="display:flex;align-items:center;gap:8px">
+            <input id="setWaOptin" type="checkbox" ${st.user.waOptin?'checked':''} style="width:auto" />
+            <label for="setWaOptin" style="margin:0">WhatsApp-Community beitreten</label>
+          </div>
           <button class="btn primary" id="saveSettings">${t('common.save')}</button>
         </div>
         <div class="card">
@@ -793,6 +819,12 @@
         s.settings.pomodoroBreak = +document.getElementById('setPomoB').value||5;
         s.settings.reducedMotion = document.getElementById('setReduced').checked;
         s.settings.waGroupLink = document.getElementById('setWaLink').value.trim();
+        s.settings.reminderTime = document.getElementById('setReminderTime').value.trim();
+        s.user.profile = document.getElementById('setProfile').value;
+        s.user.goal = document.getElementById('setGoal').value.trim();
+        s.user.phone = document.getElementById('setPhone').value.trim();
+        s.user.waOptin = document.getElementById('setWaOptin').checked;
+        s.user.cueTime = s.settings.reminderTime;
       });
       if(document.getElementById('setNotif').checked) requestNotifPermission();
       applyI18n();

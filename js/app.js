@@ -42,6 +42,22 @@
     // ambient restore
     const amb = Store.get().settings.ambient;
     if(amb && amb!=='none') AudioFX.startAmbient(amb);
+    // daily cue reminder check (every minute)
+    setInterval(()=>{
+      const s = Store.get();
+      const t = s.settings.reminderTime || s.user.cueTime;
+      if(!t || !s.settings.notifications) return;
+      if(!('Notification' in window) || Notification.permission!=='granted') return;
+      const now = new Date();
+      const [hh,mm] = t.split(':').map(Number);
+      if(now.getHours()===hh && now.getMinutes()===mm){
+        const today = now.toISOString().slice(0,10);
+        const todaySessions = (s.sessions||[]).filter(x=>x.startedAt && x.startedAt.slice(0,10)===today);
+        if(todaySessions.length===0){
+          new Notification('FocusForge', { body: 'Zeit für deine tägliche Session ⚡', icon: '' });
+        }
+      }
+    }, 60000);
     // cookie consent banner
     const consent = localStorage.getItem('ff_cookie_consent');
     const banner = document.getElementById('cookieBanner');

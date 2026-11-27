@@ -152,6 +152,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;max-width:320px;width:90%;text-align:center;box-shadow:var(--shadow)}
 .modal h3{margin-bottom:8px}
 .challenge-card{background:linear-gradient(135deg,var(--card),var(--card2))}
+.identity-card{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,var(--card),var(--card2));border-color:var(--accent)}
+.identity-emoji{font-size:40px}
+.identity-title{font-weight:700;font-size:16px}
+.cue-card{background:linear-gradient(135deg,#f59e0b22,var(--card));border-color:var(--accent2)}
 .onboarding .hero{text-align:center}
 @media(max-width:600px){
   .nav{order:3;width:100%;justify-content:flex-start;overflow:auto}
