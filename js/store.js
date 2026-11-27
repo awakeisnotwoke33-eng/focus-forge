@@ -5,7 +5,7 @@
     lang: 'de', theme: 'dark', onboarded: false,
     firstUseDate: null,
     lastExportDate: null,
-    user: { name: '', emoji: '🦊', profile: 'overwhelmed', goal: '' },
+    user: { name: '', emoji: '🦊', profile: 'overwhelmed', goal: '', phone: '', cueTime: '', waOptin: false },
     tasks: [], sessions: [], wins: [], distractions: [], gratitude: [], journal: [],
     streak: { current: 0, longest: 0, lastDate: null, freezesUsed: 0, freezeWeek: null },
     xp: 0, level: 1, badges: [],

@@ -22,27 +22,22 @@
     const st = Store.get();
     const locked = !st.onboarded;
     // feature-level lock
-    const featureLocked = !locked && (view==='mindset' && !isUnlocked('mindset'));
+    // (mindset now always unlocked - Großpunkt 2 is primary)
     document.querySelectorAll('.nav-btn').forEach(b=> {
       b.classList.toggle('active', b.dataset.view===view);
-      const btnLocked = locked || (b.dataset.view==='mindset' && !isUnlocked('mindset'));
-      b.disabled = btnLocked;
-      b.style.opacity = btnLocked ? '0.35' : '1';
-      b.style.pointerEvents = btnLocked ? 'none' : 'auto';
-      b.style.filter = btnLocked ? 'grayscale(1)' : 'none';
-      // show lock hint
-      if(b.dataset.view==='mindset' && !isUnlocked('mindset') && !locked){
-        b.title = 'Freischaltung nach 3 Sessions oder 3 Tagen';
-      } else { b.title=''; }
+      b.disabled = locked;
+      b.style.opacity = locked ? '0.35' : '1';
+      b.style.pointerEvents = locked ? 'none' : 'auto';
+      b.style.filter = locked ? 'grayscale(1)' : 'none';
+      b.title = '';
     });
     document.querySelectorAll('.dropdown-item[data-view]').forEach(b=> {
       b.classList.toggle('active', b.dataset.view===view);
     });
     if(locked && view!=='onboarding'){ view='onboarding'; currentView=view; }
-    if(featureLocked){ view='home'; currentView=view; toast('🌱 Mindset wird nach 3 Sessions oder 3 Tagen freigeschaltet.'); }
     const fn = window.Views[view];
     if(fn){ try { fn(); } catch(e){ console.error(e); const m=document.getElementById('main'); if(m) m.innerHTML = '<div class="card"><h2>⚠️ Fehler</h2><p class="muted">'+String(e.message||e)+'</p><button class="btn primary" onclick="location.reload()">Neu laden</button></div>'; } }
-    if(view!=='focus' && window._focusTimer){ clearInterval(window._focusTimer); window._focusTimer=null; }
+    // (focus timer cleanup handled in views.js)
   }
   window.App = { navigate };
 

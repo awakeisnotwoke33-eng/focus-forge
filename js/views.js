@@ -971,7 +971,7 @@
       <section class="view diary">
         <div class="hero">
           <h1>📓 Tagebuch</h1>
-          <p class="muted">Mehr als ein Tagebuch: Dankbarkeit, Wins, Sessions und freie Gedanken an einem Ort.</p>
+          <p class="muted">Tagebuch: Dankbarkeit, Wins, Sessions und freie Gedanken an einem Ort.</p>
         </div>
         <div class="card diary-header-card">
           <div class="diary-date">Heute ist der ${esc(dateStr)}</div>
