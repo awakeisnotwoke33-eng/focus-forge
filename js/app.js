@@ -6,6 +6,13 @@
     if(!st.firstUseDate) return 0;
     return Math.floor((Date.now()-new Date(st.firstUseDate).getTime())/86400000);
   }
+  function isHealthUnlocked(){
+    const st = Store.get();
+    const gratCount = (st.gratitude||[]).length;
+    const sessCount = (st.sessions||[]).length;
+    return gratCount>=3 && sessCount>=3 && !!st.user.healthGoal;
+  }
+  window.isHealthUnlocked = isHealthUnlocked;
   function isUnlocked(feature){
     const st = Store.get();
     if(!st.onboarded) return false;
@@ -31,10 +38,13 @@
       b.style.filter = locked ? 'grayscale(1)' : 'none';
       b.title = '';
     });
+    const healthBtn = document.getElementById('healthNavBtn');
+    if(healthBtn){ healthBtn.style.display = (!locked && isHealthUnlocked()) ? '' : 'none'; }
     document.querySelectorAll('.dropdown-item[data-view]').forEach(b=> {
       b.classList.toggle('active', b.dataset.view===view);
     });
     if(locked && view!=='onboarding'){ view='onboarding'; currentView=view; }
+    if(!locked && view==='health' && !isHealthUnlocked()){ view='home'; currentView=view; toast('💚 Gesundheit wird nach 3 Dankbarkeiten, 3 Sessions und einem Gesundheitsziel freigeschaltet.'); }
     const fn = window.Views[view];
     if(fn){ try { fn(); } catch(e){ console.error(e); const m=document.getElementById('main'); if(m) m.innerHTML = '<div class="card"><h2>⚠️ Fehler</h2><p class="muted">'+String(e.message||e)+'</p><button class="btn primary" onclick="location.reload()">Neu laden</button></div>'; } }
     // (focus timer cleanup handled in views.js)

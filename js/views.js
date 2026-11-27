@@ -141,6 +141,33 @@
           }
           return '';
         })()}
+        ${(() => {
+          const gCount = (st.gratitude||[]).length;
+          const sCount = (st.sessions||[]).length;
+          const hGoal = !!st.user.healthGoal;
+          const steps = [
+            {n:1, label:'3 Dankbarkeiten', done: gCount>=3, progress: Math.min(gCount,3), total:3},
+            {n:2, label:'3 Fokus-Sessions', done: sCount>=3, progress: Math.min(sCount,3), total:3},
+            {n:3, label:'Gesundheitsziel wählen', done: hGoal, progress: hGoal?1:0, total:1}
+          ];
+          const allDone = steps.every(s=>s.done);
+          return `<div class="card journey-card">
+            <h3>🧭 Deine Reise</h3>
+            <div class="journey-steps">
+              ${steps.map(s=>`
+                <div class="journey-step ${s.done?'done':''}">
+                  <div class="js-num">${s.done?'✅':s.n}</div>
+                  <div class="js-info">
+                    <div class="js-label">${esc(s.label)}</div>
+                    <div class="js-bar"><div class="js-fill" style="width:${(s.progress/s.total*100)}%"></div></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            ${allDone ? '<p class="muted small" style="margin-top:8px">🎉 Reise abgeschlossen – Gesundheit freigeschaltet!</p>' : '<p class="muted small" style="margin-top:8px">Schritt für Schritt. Ein winziger Schritt zählt.</p>'}
+          </div>`;
+        })()}
+
         <div class="stats-grid">
           <div class="stat-card"><div class="stat-val" id="streakVal">${st.streak.current}</div><div class="stat-label" data-i18n="home.streak">Streak</div></div>
           <div class="stat-card"><div class="stat-val">${todayMin}</div><div class="stat-label" data-i18n="home.focusTime">Fokuszeit heute</div></div>
@@ -1035,6 +1062,62 @@
     });
   }
 
+  // ---------- Health view (Großpunkt 3) ----------
+  function health(){
+    const st = Store.get();
+    const goals = [
+      {id:'alltag', icon:'🌅', name:'Gesunder Alltag & Routinen', desc:'Morgenroutine, Schlaf, Bewegungspausen, Bildschirmfreie Zeit, Hydration, Sonnenlicht.'},
+      {id:'training', icon:'❤️', name:'Gesundheitstraining & Herz', desc:'Herzfrequenz-Zonen, Ausdauer, Kraft, Mobilität, Atemtraining, Erholung.'},
+      {id:'ernaehrung', icon:'🥗', name:'Gesunde Ernährung / Konsum', desc:'Mahlzeiten-Struktur, Hydration, Zucker-Bewusstsein, Alkohol-Bewusstsein, Fasten.'}
+    ];
+    const selected = st.user.healthGoal;
+    const alltagEx = ['Morgenroutine (10 Min.)','Schlafroutine (feste Zeit)','Bewegungspause (2 Min. alle 60 Min.)','Bildschirmfreie Stunde vor dem Schlaf','2L Wasser am Tag','15 Min. Tageslicht am Morgen'];
+    const trainingEx = ['Zone-2-Cardio (20 Min.)','Ganzkörper-Kraft (15 Min.)','Mobilität (5 Min.)','Box Breathing (4-4-4-4)','Erholungstag (kein Training)'];
+    const ernaehrungEx = ['3 Mahlzeiten (kein Snacking)','2L Wasser','Zucker-Bewusstsein (Etiketten lesen)','Alkohol-Bewusstsein (Zähler)','Intermittierendes Fasten (optional)'];
+    const exMap = {alltag:alltagEx, training:trainingEx, ernaehrung:ernaehrungEx};
+    const ex = selected ? (exMap[selected]||[]) : [];
+    html(`
+      <section class="view health">
+        <div class="hero">
+          <h1>💚 Gesundheit</h1>
+          <p class="muted">Großpunkt 3: Gesunder Alltag, Training & Herz, Ernährung. Wähle dein Gesundheitsziel.</p>
+        </div>
+        <div class="card">
+          <h3>Dein Gesundheitsziel</h3>
+          <p class="muted small">Wähle einen Schwerpunkt (du kannst ihn später ändern).</p>
+          <div class="health-goal-grid">
+            ${goals.map(g=>`
+              <button class="health-goal-btn ${selected===g.id?'selected':''}" data-goal="${g.id}">
+                <div class="hg-icon">${g.icon}</div>
+                <div class="hg-name">${esc(g.name)}</div>
+                <div class="hg-desc">${esc(g.desc)}</div>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+        ${selected ? `
+        <div class="card">
+          <h3>Übungen: ${esc(goals.find(g=>g.id===selected).name)}</h3>
+          <ul class="health-ex-list">
+            ${ex.map(e=>`<li><label><input type="checkbox" /> ${esc(e)}</label></li>`).join('')}
+          </ul>
+          <p class="muted small">Hake ab, was du heute gemacht hast. (Lokal gespeichert, keine Bewertung.)</p>
+        </div>
+        ` : '<div class="card"><p class="muted">Wähle oben ein Ziel, um Übungen zu sehen.</p></div>'}
+        <div class="card">
+          <h3>Gesundheits-Journey</h3>
+          <p class="muted small">3 Dankbarkeiten → 3 Fokus-Sessions → Gesundheitsziel wählen → Gesundheit freigeschaltet. ✅</p>
+        </div>
+      </section>
+    `);
+    document.querySelectorAll('.health-goal-btn').forEach(b=> b.addEventListener('click', ()=>{
+      Store.update(s=>{ s.user.healthGoal = b.dataset.goal; });
+      AudioFX.success(); Confetti.burst();
+      toast('💚 Gesundheitsziel gesetzt');
+      health();
+    }));
+  }
+
   // ---------- Mood modal ----------
   function showMoodModal(){
     const overlay = document.createElement('div');
@@ -1060,7 +1143,7 @@
 
   window.showMoodModal = showMoodModal;
   // ---------- exports ----------
-  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary };
+  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary, health };
 
   // helpers
   function toast(msg){

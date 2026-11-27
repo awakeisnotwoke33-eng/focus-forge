@@ -148,6 +148,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .session-list li{background:var(--bg2);padding:8px 10px;border-radius:8px;font-size:13px}
 .wins-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .wins-list li{background:var(--bg2);padding:8px 10px;border-radius:8px;font-size:13px}
+.health-goal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.health-goal-btn{background:var(--bg2);border:2px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;text-align:left;transition:all .2s;color:var(--fg)}
+.health-goal-btn:hover{border-color:var(--accent)}
+.health-goal-btn.selected{border-color:var(--accent);background:var(--card2)}
+.hg-icon{font-size:28px;margin-bottom:6px}
+.hg-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.hg-desc{font-size:12px;color:var(--muted)}
+.health-ex-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.health-ex-list li{background:var(--bg2);padding:8px 10px;border-radius:8px;font-size:13px}
+.health-ex-list input{width:auto;margin-right:8px}
 .diary-day{border-left:3px solid var(--accent)}
 .diary-text{margin:6px 0;font-size:14px}
 .diary-header-card{text-align:center}
@@ -186,6 +196,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .identity-emoji{font-size:40px}
 .identity-title{font-weight:700;font-size:16px}
 .cue-card{background:linear-gradient(135deg,#f59e0b22,var(--card));border-color:var(--accent2)}
+.journey-card{background:linear-gradient(135deg,var(--card),var(--card2))}
+.journey-steps{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.journey-step{display:flex;align-items:center;gap:12px}
+.journey-step.done{opacity:.7}
+.js-num{width:28px;height:28px;border-radius:50%;background:var(--bg2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0}
+.journey-step.done .js-num{background:var(--accent);color:#0b0d1a;border-color:var(--accent)}
+.js-info{flex:1}
+.js-label{font-size:13px;font-weight:600;margin-bottom:4px}
+.js-bar{height:6px;background:var(--bg2);border-radius:999px;overflow:hidden}
+.js-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .5s}
 .onboarding .hero{text-align:center}
 @media(max-width:600px){
   .nav{order:3;width:100%;justify-content:flex-start;overflow:auto}
