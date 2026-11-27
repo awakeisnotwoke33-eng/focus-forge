@@ -929,6 +929,65 @@
     });
   }
 
+  // ---------- Diary view (Tagebuch) ----------
+  function diary(){
+    const st = Store.get();
+    const today = todayKey();
+    // build a unified timeline grouped by date
+    const dates = new Set();
+    (st.gratitude||[]).forEach(g=>dates.add(g.date));
+    (st.journal||[]).forEach(j=>dates.add(j.date));
+    (st.wins||[]).forEach(w=>dates.add((w.date||'').slice(0,10)));
+    (st.sessions||[]).forEach(s=>{ if(s.startedAt) dates.add(s.startedAt.slice(0,10)); });
+    const sortedDates = [...dates].filter(Boolean).sort().reverse().slice(0,14);
+    html(`
+      <section class="view diary">
+        <div class="hero">
+          <h1>📓 Tagebuch</h1>
+          <p class="muted">Mehr als ein Tagebuch: Dankbarkeit, Wins, Sessions und freie Gedanken an einem Ort.</p>
+        </div>
+        <div class="card">
+          <h3>Heutiger Eintrag</h3>
+          <textarea id="journalText" rows="3" placeholder="Was beschäftigt dich heute?">${esc((st.journal||[]).find(j=>j.date===today)?.text||'')}</textarea>
+          <div class="row" style="margin-top:8px">
+            <select id="journalMood">
+              ${['😫','😕','😐','🙂','😄'].map((e,i)=>`<option value="${i+1}" ${((st.journal||[]).find(j=>j.date===today)?.mood===(i+1))?'selected':''}>${e}</option>`).join('')}
+            </select>
+            <button class="btn primary small" id="saveJournal">Speichern</button>
+          </div>
+        </div>
+        ${sortedDates.map(d=>{
+          const g = (st.gratitude||[]).find(x=>x.date===d);
+          const j = (st.journal||[]).find(x=>x.date===d);
+          const dayWins = (st.wins||[]).filter(w=> (w.date||'').slice(0,10)===d);
+          const daySessions = (st.sessions||[]).filter(s=> s.startedAt && s.startedAt.slice(0,10)===d);
+          const dayMin = daySessions.reduce((a,s)=>a+(s.duration||0),0);
+          return `
+          <div class="card diary-day">
+            <h3>${d}${d===today?' (heute)':''}</h3>
+            ${j?`<p class="diary-text">${esc(j.text)} <span class="muted small">${['','😫','😕','😐','🙂','😄'][j.mood]||''}</span></p>`:''}
+            ${g?`<div class="muted small">💙 Dankbar: ${g.items.map(esc).join(', ')}</div>`:''}
+            ${dayWins.length?`<div class="muted small">🏆 ${dayWins.map(w=>esc(w.text)).join(' · ')}</div>`:''}
+            ${daySessions.length?`<div class="muted small">🎯 ${daySessions.length} Sessions · ${dayMin} Min</div>`:''}
+          </div>`;
+        }).join('') || '<div class="empty muted">Noch keine Einträge. Fang heute an.</div>'}
+      </section>
+    `);
+    document.getElementById('saveJournal')?.addEventListener('click', ()=>{
+      const text = document.getElementById('journalText').value.trim();
+      const mood = +document.getElementById('journalMood').value;
+      Store.update(s=>{
+        if(!s.journal) s.journal=[];
+        s.journal = s.journal.filter(j=>j.date!==today);
+        if(text) s.journal.push({date:today, text, mood});
+        s.xp += 2; recalcLevel(s);
+      });
+      AudioFX.success();
+      toast('📓 Gespeichert');
+      diary();
+    });
+  }
+
   // ---------- Mood modal ----------
   function showMoodModal(){
     const overlay = document.createElement('div');
@@ -954,7 +1013,7 @@
 
   window.showMoodModal = showMoodModal;
   // ---------- exports ----------
-  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset };
+  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary };
 
   // helpers
   function toast(msg){

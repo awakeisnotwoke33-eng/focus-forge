@@ -1,4 +1,4 @@
-const CACHE = 'focusforge-v2';
+const CACHE = 'focusforge-v3';
 const ASSETS = ['./','./index.html','./css/styles.css','./js/i18n.js','./js/store.js','./js/methods.js','./js/audio.js','./js/confetti.js','./js/views.js','./js/app.js','./manifest.json'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).catch(()=>{})); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))); self.clients.claim(); });

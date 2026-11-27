@@ -6,7 +6,7 @@
     firstUseDate: null,
     lastExportDate: null,
     user: { name: '', emoji: '🦊', profile: 'overwhelmed', goal: '' },
-    tasks: [], sessions: [], wins: [], distractions: [], gratitude: [],
+    tasks: [], sessions: [], wins: [], distractions: [], gratitude: [], journal: [],
     streak: { current: 0, longest: 0, lastDate: null, freezesUsed: 0, freezeWeek: null },
     xp: 0, level: 1, badges: [],
     settings: { sound: true, ambient: 'none', notifications: false, pomodoroWork: 25, pomodoroBreak: 5, reducedMotion: false, waGroupLink: '', reminderTime: '' }

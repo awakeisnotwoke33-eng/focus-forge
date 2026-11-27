@@ -24,16 +24,24 @@
     </div>
     <nav class="nav" id="nav">
       <button data-view="home" class="nav-btn active">🏠 <span data-i18n="nav.home">Home</span></button>
-      <button data-view="methods" class="nav-btn">🧰 <span data-i18n="nav.methods">Methoden</span></button>
       <button data-view="mindset" class="nav-btn">🌱 <span>Mindset</span></button>
-      <button data-view="tasks" class="nav-btn">✅ <span data-i18n="nav.tasks">Aufgaben</span></button>
       <button data-view="focus" class="nav-btn">🎯 <span data-i18n="nav.focus">Fokus</span></button>
+      <button data-view="tasks" class="nav-btn">✅ <span data-i18n="nav.tasks">Aufgaben</span></button>
+      <button data-view="diary" class="nav-btn">📓 <span>Tagebuch</span></button>
       <button data-view="insights" class="nav-btn">📊 <span data-i18n="nav.insights">Insights</span></button>
-      <button data-view="settings" class="nav-btn">⚙️ <span data-i18n="nav.settings">Einstellungen</span></button>
     </nav>
     <div class="topbar-right">
-      <button id="langToggle" class="icon-btn" aria-label="Language">🌐</button>
       <div class="streak-pill" id="streakPill">🔥 <span id="streakNum">0</span></div>
+      <div class="dropdown" id="menuDropdown">
+        <button id="menuToggle" class="icon-btn" aria-label="Menü">☰</button>
+        <div class="dropdown-menu" id="dropdownMenu" style="display:none">
+          <button data-view="methods" class="dropdown-item">🧰 Methoden</button>
+          <button data-view="settings" class="dropdown-item">⚙️ Einstellungen</button>
+          <hr />
+          <button id="ddLang" class="dropdown-item">🌐 Sprache wechseln</button>
+          <button id="ddTheme" class="dropdown-item">🎨 Theme wechseln</button>
+        </div>
+      </div>
     </div>
   </header>
 

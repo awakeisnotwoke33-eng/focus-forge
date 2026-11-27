@@ -11,7 +11,7 @@
     if(!st.onboarded) return false;
     const sessions = (st.sessions||[]).length;
     const days = daysSinceFirstUse();
-    if(feature==='mindset') return sessions>=3 || days>=3;
+    if(feature==='mindset') return true; // Mindset is primary (Großpunkt 2 first)
     if(feature==='insights_advanced') return days>=7;
     if(feature==='community') return days>=14;
     return true;
@@ -45,11 +45,6 @@
 
   function updateTopbar(){
     document.getElementById('streakNum').textContent = Store.get().streak.current;
-    document.getElementById('langToggle').onclick = ()=>{
-      const cur = Store.get('lang'); const next = cur==='de'?'en':'de';
-      Store.set('lang', next); applyI18n(); navigate(currentView); updateTopbar();
-    };
-    // theme
     document.documentElement.setAttribute('data-theme', Store.get('theme')||'dark');
   }
 
@@ -61,6 +56,23 @@
     updateTopbar();
     // nav
     document.querySelectorAll('.nav-btn').forEach(b=> b.addEventListener('click', ()=>{ AudioFX.click(); navigate(b.dataset.view); }));
+    // dropdown menu
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('dropdownMenu');
+    if(toggle && menu){
+      toggle.addEventListener('click', (e)=>{ e.stopPropagation(); menu.style.display = menu.style.display==='none'?'block':'none'; });
+      document.addEventListener('click', ()=>{ menu.style.display='none'; });
+      menu.querySelectorAll('.dropdown-item').forEach(b=>{
+        b.addEventListener('click', (e)=>{
+          e.stopPropagation();
+          const v = b.dataset.view;
+          if(v){ AudioFX.click(); navigate(v); }
+          else if(b.id==='ddLang'){ const cur=Store.get('lang'); Store.set('lang', cur==='de'?'en':'de'); applyI18n(); navigate(currentView); updateTopbar(); }
+          else if(b.id==='ddTheme'){ const cur=Store.get('theme'); const next=cur==='dark'?'light':'dark'; Store.set('theme', next); document.documentElement.setAttribute('data-theme', next); }
+          menu.style.display='none';
+        });
+      });
+    }
     // service worker
     if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
     // ambient restore
