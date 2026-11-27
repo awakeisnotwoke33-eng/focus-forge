@@ -32,6 +32,7 @@
           </div>
           <p class="muted small">Profil, Ziele und WhatsApp-Opt-in kannst du später in den Einstellungen ergänzen.</p>
           <button id="obFinish" class="btn primary big" data-i18n="onboard.finish">Los geht’s</button>
+          <button id="obSkip" class="btn ghost small" style="margin-top:8px">Überspringen</button>
         </div>
       </section>
     `);
@@ -44,13 +45,17 @@
     document.getElementById('obFinish').onclick=()=>{
       const name = document.getElementById('obName').value.trim();
       const cueTime = document.getElementById('obCueTime').value.trim();
-      Store.update(s=>{ s.user.name=name; s.user.cueTime=cueTime; s.onboarded=true; if(cueTime) s.settings.reminderTime=cueTime; });
+      Store.update(s=>{ s.user.name=name; s.user.cueTime=cueTime; s.onboarded=true; if(cueTime) s.settings.reminderTime=cueTime; if(!s.firstUseDate) s.firstUseDate=new Date().toISOString(); });
       if(cueTime) requestNotifPermission();
       AudioFX.success();
       Confetti.burst();
       toast(t('msg.saved'));
       App.navigate('home');
     };
+    document.getElementById('obSkip')?.addEventListener('click', ()=>{
+      Store.update(s=>{ s.onboarded=true; if(!s.firstUseDate) s.firstUseDate=new Date().toISOString(); });
+      App.navigate('home');
+    });
   }
 
   // ---------- Home ----------
@@ -125,6 +130,14 @@
               <strong>💙 Gestern verpasst – heute zählt doppelt</strong>
               <p class="muted small">Kein Problem. Selbstmitgefühl > Schuld. Ein winziger Schritt reicht.</p>
             </div>`;
+          }
+          return '';
+        })()}
+        ${(() => {
+          const last = st.lastExportDate;
+          const daysSinceExport = last ? Math.floor((Date.now()-new Date(last).getTime())/86400000) : 999;
+          if(st.sessions.length>=5 && daysSinceExport>=7){
+            return `<div class="card cue-card"><strong>💾 Backup empfohlen</strong><p class="muted small">Du hast ${st.sessions.length} Sessions. Exportiere deine Daten, um sie nicht zu verlieren.</p><button class="btn ghost small" onclick="App.navigate('insights')">Exportieren</button></div>`;
           }
           return '';
         })()}
@@ -562,6 +575,7 @@
     const durMin = Math.round((focusTotal - focusRemaining)/60) || Math.round(focusTotal/60);
     const moodAfter = null;
     Store.update(s=>{
+      if(!s.firstUseDate) s.firstUseDate=new Date().toISOString();
       s.sessions.push({id:Date.now(), method:focusMethod, duration:durMin, completed:true, startedAt:new Date().toISOString(), taskId:focusTaskId, moodBefore: s._lastMood||null, moodAfter });
       s.xp += 5 + Math.floor(durMin/5); recalcLevel(s);
       if(focusTaskId){ const tk=s.tasks.find(t=>t.id==focusTaskId); if(tk){ /* not auto-done */ } }
@@ -681,6 +695,7 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a'); a.href=url; a.download='focusforge-backup.json'; a.click();
       URL.revokeObjectURL(url);
+      Store.update(s=>{ s.lastExportDate = new Date().toISOString(); });
       toast(t('msg.exported'));
     };
     document.getElementById('importBtn').onclick = ()=>{
@@ -841,6 +856,79 @@
     }
   }
 
+  // ---------- Mindset view ----------
+  function mindset(){
+    const st = Store.get();
+    const today = todayKey();
+    const todayEntry = (st.gratitude||[]).find(g=>g.date===today);
+    const prompts = (st.lang==='en') ? [
+      'What went well today?',
+      'What are you grateful for right now?',
+      'What did you learn from a recent mistake?',
+      'What is one strength you used today?',
+      'What would your best possible self do today?',
+      'What are you looking forward to?'
+    ] : [
+      'Was ist heute gut gelaufen?',
+      'Wofür bist du gerade dankbar?',
+      'Was hast du aus einem Fehler gelernt?',
+      'Welche Stärke hast du heute genutzt?',
+      'Was würde dein bestmögliches Ich heute tun?',
+      'Worauf freust du dich?'
+    ];
+    const prompt = prompts[new Date().getDate() % prompts.length];
+    html(`
+      <section class="view mindset">
+        <div class="hero">
+          <h1>🌱 Mindset & Dankbarkeit</h1>
+          <p class="muted">Kleine tägliche Rituale, die den Blick verschieben – von dem, was fehlt, zu dem, was wirkt.</p>
+        </div>
+        <div class="card">
+          <h3>Impuls des Tages</h3>
+          <p class="muted" style="font-style:italic">„${esc(prompt)}"</p>
+        </div>
+        <div class="card">
+          <h3>Dankbarkeits-Journal (heute)</h3>
+          ${todayEntry ? `
+            <ul class="wins-list">${todayEntry.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul>
+            <p class="muted small">Gespeichert. Morgen ein neuer Eintrag.</p>
+          ` : `
+            <p class="muted small">3 Dinge, die heute gut gelaufen sind:</p>
+            <input id="g1" type="text" placeholder="1." />
+            <input id="g2" type="text" placeholder="2." style="margin-top:8px" />
+            <input id="g3" type="text" placeholder="3." style="margin-top:8px" />
+            <button class="btn primary" id="saveGratitude" style="margin-top:12px">Speichern</button>
+          `}
+        </div>
+        <div class="card">
+          <h3>Identität</h3>
+          <p>Du bist jemand, der <strong>anfängt</strong> und <strong>dankbar ist</strong>. ${st.sessions.length} Sessions, ${st.wins.length} Wins.</p>
+        </div>
+        <div class="card">
+          <h3>Letzte Einträge</h3>
+          <ul class="wins-list">
+            ${(st.gratitude||[]).slice(-7).reverse().map(g=>`<li><strong>${g.date}</strong>: ${g.items.join(', ')}</li>`).join('') || '<li class="muted">Noch keine Einträge.</li>'}
+          </ul>
+        </div>
+      </section>
+    `);
+    document.getElementById('saveGratitude')?.addEventListener('click', ()=>{
+      const items = [document.getElementById('g1').value, document.getElementById('g2').value, document.getElementById('g3').value].map(x=>x.trim()).filter(Boolean);
+      if(items.length===0){ toast('⚠️'); return; }
+      Store.update(s=>{
+        if(!s.gratitude) s.gratitude=[];
+        // replace today's entry if exists
+        s.gratitude = s.gratitude.filter(g=>g.date!==today);
+        s.gratitude.push({date:today, items, prompt});
+        s.xp += 3; recalcLevel(s);
+        s.wins.push({id:Date.now(), text:'Dankbarkeit geloggt', date:new Date().toISOString()});
+      });
+      AudioFX.success(); Confetti.burst();
+      toast('💙 Gespeichert');
+      mindset();
+    });
+  }
+
   // ---------- Mood modal ----------
   function showMoodModal(){
     const overlay = document.createElement('div');
@@ -866,7 +954,7 @@
 
   window.showMoodModal = showMoodModal;
   // ---------- exports ----------
-  window.Views = { onboarding, home, methods, tasks, focus, insights, settings };
+  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset };
 
   // helpers
   function toast(msg){
