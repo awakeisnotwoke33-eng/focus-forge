@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b0d1a" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="description" content="FocusForge – besiege Prokrastination mit wissenschaftlich fundierten Methoden. Bilingual, offline-fähig, kostenlos." />
+<title>FocusForge – Prokrastination besiegen</title>
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235eead4'/%3E%3Cstop offset='1' stop-color='%23f59e0b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='46' fill='url(%23g)'/%3E%3Cpath d='M30 52 L44 66 L72 36' stroke='white' stroke-width='9' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">⚡</span>
+      <span class="brand-name">FocusForge</span>
+    </div>
+    <nav class="nav" id="nav">
+      <button data-view="home" class="nav-btn active">🏠 <span data-i18n="nav.home">Home</span></button>
+      <button data-view="methods" class="nav-btn">🧰 <span data-i18n="nav.methods">Methoden</span></button>
+      <button data-view="tasks" class="nav-btn">✅ <span data-i18n="nav.tasks">Aufgaben</span></button>
+      <button data-view="focus" class="nav-btn">🎯 <span data-i18n="nav.focus">Fokus</span></button>
+      <button data-view="insights" class="nav-btn">📊 <span data-i18n="nav.insights">Insights</span></button>
+      <button data-view="settings" class="nav-btn">⚙️ <span data-i18n="nav.settings">Einstellungen</span></button>
+    </nav>
+    <div class="topbar-right">
+      <button id="langToggle" class="icon-btn" aria-label="Language">🌐</button>
+      <div class="streak-pill" id="streakPill">🔥 <span id="streakNum">0</span></div>
+    </div>
+  </header>
+
+  <main id="main" class="main"></main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <canvas id="confetti" class="confetti-canvas"></canvas>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/store.js"></script>
+<script src="js/methods.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/confetti.js"></script>
+<script src="js/views.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

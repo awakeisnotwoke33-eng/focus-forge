@@ -1,0 +1,102 @@
+// i18n.js - bilingual DE/EN
+window.I18N = {
+  de: {
+    'nav.home':'Home','nav.methods':'Methoden','nav.tasks':'Aufgaben','nav.focus':'Fokus','nav.insights':'Insights','nav.settings':'Einstellungen',
+    'common.save':'Speichern','common.cancel':'Abbrechen','common.delete':'Löschen','common.edit':'Bearbeiten','common.add':'Hinzufügen','common.close':'Schließen','common.yes':'Ja','common.no':'Nein','common.back':'Zurück','common.next':'Weiter','common.start':'Start','common.stop':'Stopp','common.pause':'Pause','common.resume':'Fortsetzen','common.done':'Fertig','common.skip':'Überspringen',
+    'home.greeting.morning':'Guten Morgen','home.greeting.afternoon':'Guten Tag','home.greeting.evening':'Guten Abend','home.greeting.night':'Gute Nacht',
+    'home.subtitle':'Was ist heute dein EIN Ding?',
+    'home.oneThing':'Dein nächster Schritt',
+    'home.oneThing.empty':'Noch keine Aufgabe. Leg los – füge eine hinzu.',
+    'home.oneThing.cta':'Jetzt 5 Min. starten',
+    'home.mood':'Stimmung','home.energy':'Energie','home.focusTime':'Fokuszeit heute','home.streak':'Streak','home.wins':'Wins diese Woche',
+    'home.quick':'Schnellstart',
+    'home.quote':'„Der beste Zeitpunkt war gestern. Der zweitbeste ist jetzt."',
+    'home.honest':'Ehrlich: Heute prokrastiniert?',
+    'home.honest.yes':'Ja, leider','home.honest.no':'Nein, ich war dran',
+    'home.honest.response.yes':'Kein Problem. Selbstmitgefühl > Schuld. Ein winziger Schritt zählt. Du schaffst das. 💙',
+    'home.honest.response.no':'Stark. Genieße den Flow – und feiere ihn. 🎉',
+    'onboard.title':'Willkommen bei FocusForge',
+    'onboard.sub':'Besiege Prokrastination – bewusst und unterbewusst. Lass uns in 60 Sekunden starten.',
+    'onboard.name':'Wie heißt du?','onboard.emoji':'Wähle deinen Avatar',
+    'onboard.profile':'Was ist dein Prokrastinations-Typ?',
+    'onboard.profile.perfectionist':'Perfektionist (muss alles perfekt sein)',
+    'onboard.profile.overwhelmed':'Überfordert (zu viel auf einmal)',
+    'onboard.profile.distracted':'Ablenkbar (Handy, Tabs, …)',
+    'onboard.profile.bored':'Gelangweilt (Aufgabe fühlt sich sinnlos an)',
+    'onboard.profile.fearful':'Ängstlich (Angst vor Scheitern/Kritik)',
+    'onboard.profile.energy':'Energieproblem (müde, leer)',
+    'onboard.goal':'Was willst du diese Woche erreichen?',
+    'onboard.finish':'Los geht’s',
+    'methods.title':'Methoden-Bibliothek','methods.sub':'18 wissenschaftlich fundierte Wege aus der Prokrastination. Wähle passend zu dir.',
+    'methods.try':'Jetzt ausprobieren','methods.bestFor':'Passt für','methods.duration':'Dauer',
+    'tasks.title':'Aufgaben','tasks.sub':'Definiere den kleinsten nächsten Schritt. Das ist der Schlüssel.',
+    'tasks.add':'Neue Aufgabe','tasks.placeholder':'Was willst du erledigen?','tasks.nextAction':'Nächster kleinster Schritt','tasks.nextAction.ph':'z. B. „Dokument öffnen und erste Zeile lesen"',
+    'tasks.priority':'Priorität','tasks.priority.high':'Hoch','tasks.priority.med':'Mittel','tasks.priority.low':'Niedrig',
+    'tasks.tag':'Tag','tasks.breakdown':'Aufteilen','tasks.done':'Erledigt','tasks.empty':'Noch keine Aufgaben. Das ist okay – fang mit einer kleinen an.',
+    'tasks.filter.all':'Alle','tasks.filter.open':'Offen','tasks.filter.done':'Erledigt',
+    'focus.title':'Fokus-Session','focus.method':'Methode','focus.duration':'Dauer (Min)','focus.task':'Aufgabe (optional)','focus.intent':'Implementierungs-Intention (Wenn … dann …)','focus.intent.ph':'Wenn ich mich an den Schreibtisch setze, dann öffne ich zuerst …',
+    'focus.breathe':'Atme 3 Sekunden. Du bist bereit.','focus.parking':'Ablenkungs-Parkplatz','focus.parking.ph':'Gedanke notieren und zurück zum Fokus …','focus.complete':'Session beenden','focus.completed':'Session geschafft! 🎉','focus.mood.before':'Stimmung vorher','focus.mood.after':'Stimmung nachher',
+    'insights.title':'Insights','insights.sub':'Deine Daten. Dein Fortschritt. Keine Scham, nur Klarheit.',
+    'insights.streak':'Aktueller Streak','insights.longest':'Längster Streak','insights.sessions':'Sessions','insights.minutes':'Fokusminuten','insights.tasks':'Erledigte Aufgaben','insights.wins':'Wins','insights.weekly':'Wochenrückblick','insights.export':'Daten exportieren','insights.import':'Daten importieren','insights.reset':'Alles zurücksetzen',
+    'insights.badges':'Abzeichen',
+    'settings.title':'Einstellungen','settings.sound':'Sound-Effekte','settings.ambient':'Umgebungsgeräusch','settings.notifications':'Erinnerungen','settings.pomodoro':'Pomodoro (Arbeit/Pause)','settings.reduced':'Reduzierte Bewegung','settings.theme':'Theme','settings.data':'Daten',
+    'settings.lang':'Sprache',
+    'ambient.none':'Aus','ambient.rain':'Regen','ambient.brown':'Braunes Rauschen','ambient.ocean':'Ozean',
+    'badge.firstSession':'Erste Session','badge.streak3':'3-Tage-Streak','badge.streak7':'7-Tage-Streak','badge.tenTasks':'10 Aufgaben erledigt','badge.hundredMin':'100 Fokusminuten','badge.nightOwl':'Nacht-Eule','badge.earlyBird':'Früher Vogel',
+    'msg.saved':'Gespeichert','msg.deleted':'Gelöscht','msg.taskAdded':'Aufgabe hinzugefügt','msg.sessionDone':'Session abgeschlossen – stark!','msg.exported':'Exportiert','msg.imported':'Importiert','msg.reset':'Zurückgesetzt',
+  },
+  en: {
+    'nav.home':'Home','nav.methods':'Methods','nav.tasks':'Tasks','nav.focus':'Focus','nav.insights':'Insights','nav.settings':'Settings',
+    'common.save':'Save','common.cancel':'Cancel','common.delete':'Delete','common.edit':'Edit','common.add':'Add','common.close':'Close','common.yes':'Yes','common.no':'No','common.back':'Back','common.next':'Next','common.start':'Start','common.stop':'Stop','common.pause':'Pause','common.resume':'Resume','common.done':'Done','common.skip':'Skip',
+    'home.greeting.morning':'Good morning','home.greeting.afternoon':'Good afternoon','home.greeting.evening':'Good evening','home.greeting.night':'Good night',
+    'home.subtitle':'What is your ONE thing today?',
+    'home.oneThing':'Your next step','home.oneThing.empty':'No task yet. Start small – add one.',
+    'home.oneThing.cta':'Start 5 min now',
+    'home.mood':'Mood','home.energy':'Energy','home.focusTime':'Focus time today','home.streak':'Streak','home.wins':'Wins this week',
+    'home.quick':'Quick start','home.quote':'"The best time was yesterday. The second best is now."',
+    'home.honest':'Honestly: procrastinated today?',
+    'home.honest.yes':'Yes, sadly','home.honest.no':'No, I showed up',
+    'home.honest.response.yes':'No problem. Self-compassion > guilt. One tiny step counts. You got this. 💙',
+    'home.honest.response.no':'Strong. Enjoy the flow – and celebrate it. 🎉',
+    'onboard.title':'Welcome to FocusForge','onboard.sub':'Defeat procrastination – consciously and subconsciously. Let’s start in 60 seconds.',
+    'onboard.name':'What’s your name?','onboard.emoji':'Pick your avatar',
+    'onboard.profile':'What’s your procrastination type?',
+    'onboard.profile.perfectionist':'Perfectionist (everything must be perfect)',
+    'onboard.profile.overwhelmed':'Overwhelmed (too much at once)',
+    'onboard.profile.distracted':'Distractable (phone, tabs, …)',
+    'onboard.profile.bored':'Bored (task feels meaningless)',
+    'onboard.profile.fearful':'Fearful (fear of failure/criticism)',
+    'onboard.profile.energy':'Energy problem (tired, drained)',
+    'onboard.goal':'What do you want to achieve this week?',
+    'onboard.finish':'Let’s go',
+    'methods.title':'Method Library','methods.sub':'18 science-backed ways out of procrastination. Pick what fits you.',
+    'methods.try':'Try now','methods.bestFor':'Best for','methods.duration':'Duration',
+    'tasks.title':'Tasks','tasks.sub':'Define the smallest next step. That’s the key.',
+    'tasks.add':'New task','tasks.placeholder':'What do you want to get done?','tasks.nextAction':'Smallest next step','tasks.nextAction.ph':'e.g. "Open the doc and read the first line"',
+    'tasks.priority':'Priority','tasks.priority.high':'High','tasks.priority.med':'Medium','tasks.priority.low':'Low',
+    'tasks.tag':'Tag','tasks.breakdown':'Break down','tasks.done':'Done','tasks.empty':'No tasks yet. That’s okay – start with a tiny one.',
+    'tasks.filter.all':'All','tasks.filter.open':'Open','tasks.filter.done':'Done',
+    'focus.title':'Focus Session','focus.method':'Method','focus.duration':'Duration (min)','focus.task':'Task (optional)','focus.intent':'Implementation intention (If … then …)',
+    'focus.intent.ph':'If I sit at my desk, then I will first open …',
+    'focus.breathe':'Breathe for 3 seconds. You’re ready.','focus.parking':'Distraction parking lot','focus.parking.ph':'Note the thought and return to focus …','focus.complete':'End session','focus.completed':'Session complete! 🎉','focus.mood.before':'Mood before','focus.mood.after':'Mood after',
+    'insights.title':'Insights','insights.sub':'Your data. Your progress. No shame, only clarity.',
+    'insights.streak':'Current streak','insights.longest':'Longest streak','insights.sessions':'Sessions','insights.minutes':'Focus minutes','insights.tasks':'Tasks done','insights.wins':'Wins','insights.weekly':'Weekly review','insights.export':'Export data','insights.import':'Import data','insights.reset':'Reset all','insights.badges':'Badges',
+    'settings.title':'Settings','settings.sound':'Sound effects','settings.ambient':'Ambient sound','settings.notifications':'Reminders','settings.pomodoro':'Pomodoro (work/break)','settings.reduced':'Reduced motion','settings.theme':'Theme','settings.data':'Data','settings.lang':'Language',
+    'ambient.none':'Off','ambient.rain':'Rain','ambient.brown':'Brown noise','ambient.ocean':'Ocean',
+    'badge.firstSession':'First session','badge.streak3':'3-day streak','badge.streak7':'7-day streak','badge.tenTasks':'10 tasks done','badge.hundredMin':'100 focus minutes','badge.nightOwl':'Night owl','badge.earlyBird':'Early bird',
+    'msg.saved':'Saved','msg.deleted':'Deleted','msg.taskAdded':'Task added','msg.sessionDone':'Session complete – strong!','msg.exported':'Exported','msg.imported':'Imported','msg.reset':'Reset',
+  }
+};
+window.t = (key) => {
+  const lang = (window.Store && window.Store.get('lang')) || 'de';
+  return (window.I18N[lang] && window.I18N[lang][key]) || (window.I18N.de[key]) || key;
+};
+window.applyI18n = () => {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+  });
+  document.documentElement.lang = (window.Store && window.Store.get('lang')) || 'de';
+};
