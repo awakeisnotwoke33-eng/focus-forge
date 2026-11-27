@@ -7,7 +7,7 @@
     tasks: [], sessions: [], wins: [], distractions: [],
     streak: { current: 0, longest: 0, lastDate: null, freezesUsed: 0, freezeWeek: null },
     xp: 0, level: 1, badges: [],
-    settings: { sound: true, ambient: 'none', notifications: false, pomodoroWork: 25, pomodoroBreak: 5, reducedMotion: false }
+    settings: { sound: true, ambient: 'none', notifications: false, pomodoroWork: 25, pomodoroBreak: 5, reducedMotion: false, waGroupLink: '' }
   };
   let state = null;
   function load(){ try { const raw = localStorage.getItem(KEY); state = raw ? Object.assign({}, defaultState, JSON.parse(raw)) : Object.assign({}, defaultState); } catch(e){ state = Object.assign({}, defaultState); } if(!state.streak) state.streak={current:0,longest:0,lastDate:null,freezesUsed:0,freezeWeek:null}; return state; }

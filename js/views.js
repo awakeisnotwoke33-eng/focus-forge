@@ -15,6 +15,7 @@
         <div class="card hero-card">
           <h1 data-i18n="onboard.title">Willkommen bei FocusForge</h1>
           <p class="muted" data-i18n="onboard.sub">Besiege Prokrastination – bewusst und unterbewusst. Lass uns in 60 Sekunden starten.</p>
+          <p class="muted small" style="margin-top:8px">🔒 Opt-in: Deine Daten bleiben in deinem Browser. Optional: Tritt der WhatsApp-Community bei, um dich mit anderen Prokrastinierern auszutauschen.</p>
           <div class="field">
             <label data-i18n="onboard.name">Wie heißt du?</label>
             <input id="obName" type="text" value="${esc(st.user.name)}" placeholder="Name" />
@@ -35,6 +36,17 @@
             <label data-i18n="onboard.goal">Was willst du diese Woche erreichen?</label>
             <textarea id="obGoal" rows="2" placeholder="…">${esc(st.user.goal)}</textarea>
           </div>
+          <div class="field">
+            <label>📱 Telefonnummer (optional, für WhatsApp-Community)</label>
+            <input id="obPhone" type="tel" value="${esc(st.user.phone||'')}" placeholder="+49 ..." />
+          </div>
+          <div class="field" style="display:flex;align-items:center;gap:8px">
+            <input id="obWaOptin" type="checkbox" ${st.user.waOptin?'checked':''} style="width:auto" />
+            <label for="obWaOptin" style="margin:0">Ich möchte der WhatsApp-Community beitreten</label>
+          </div>
+          <div id="waLinkBox" style="display:none;margin-bottom:12px">
+            <a id="waLink" class="btn primary small" target="_blank" rel="noopener">WhatsApp-Community beitreten</a>
+          </div>
           <button id="obFinish" class="btn primary big" data-i18n="onboard.finish">Los geht’s</button>
         </div>
       </section>
@@ -45,10 +57,25 @@
     document.querySelectorAll('.profile-btn').forEach(b=>{
       b.onclick=()=>{ document.querySelectorAll('.profile-btn').forEach(x=>x.classList.remove('selected')); b.classList.add('selected'); Store.update(s=>{s.user.profile=b.dataset.profile;}); };
     });
+    // toggle whatsapp link box
+    const waCb = document.getElementById('obWaOptin');
+    const waBox = document.getElementById('waLinkBox');
+    const waLink = document.getElementById('waLink');
+    const updateWaBox = ()=>{
+      if(waCb.checked){
+        waBox.style.display='block';
+        const link = (Store.get().settings.waGroupLink) || 'https://chat.whatsapp.com/DEINEN_LINK_HIER';
+        waLink.href = link;
+      } else { waBox.style.display='none'; }
+    };
+    waCb.addEventListener('change', updateWaBox);
+    updateWaBox();
     document.getElementById('obFinish').onclick=()=>{
       const name = document.getElementById('obName').value.trim();
       const goal = document.getElementById('obGoal').value.trim();
-      Store.update(s=>{ s.user.name=name; s.user.goal=goal; s.onboarded=true; });
+      const phone = document.getElementById('obPhone').value.trim();
+      const waOptin = document.getElementById('obWaOptin').checked;
+      Store.update(s=>{ s.user.name=name; s.user.goal=goal; s.user.phone=phone; s.user.waOptin=waOptin; s.onboarded=true; });
       AudioFX.success();
       Confetti.burst();
       toast(t('msg.saved'));
@@ -740,6 +767,10 @@
               <option value="light" ${st.theme==='light'?'selected':''}>Light</option>
             </select>
           </div>
+          <div class="setting-row">
+            <label>WhatsApp-Community Link</label>
+            <input id="setWaLink" type="text" value="${esc(s.waGroupLink||'')}" placeholder="https://chat.whatsapp.com/..." style="min-width:240px" />
+          </div>
           <button class="btn primary" id="saveSettings">${t('common.save')}</button>
         </div>
         <div class="card">
@@ -761,6 +792,7 @@
         s.settings.pomodoroWork = +document.getElementById('setPomoW').value||25;
         s.settings.pomodoroBreak = +document.getElementById('setPomoB').value||5;
         s.settings.reducedMotion = document.getElementById('setReduced').checked;
+        s.settings.waGroupLink = document.getElementById('setWaLink').value.trim();
       });
       if(document.getElementById('setNotif').checked) requestNotifPermission();
       applyI18n();

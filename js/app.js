@@ -3,12 +3,18 @@
   let currentView = 'home';
   function navigate(view){
     currentView = view;
-    document.querySelectorAll('.nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.view===view));
     const st = Store.get();
-    if(!st.onboarded && view!=='onboarding'){ view='onboarding'; currentView=view; }
+    const locked = !st.onboarded;
+    document.querySelectorAll('.nav-btn').forEach(b=> {
+      b.classList.toggle('active', b.dataset.view===view);
+      b.disabled = locked;
+      b.style.opacity = locked ? '0.35' : '1';
+      b.style.pointerEvents = locked ? 'none' : 'auto';
+      b.style.filter = locked ? 'grayscale(1)' : 'none';
+    });
+    if(locked && view!=='onboarding'){ view='onboarding'; currentView=view; }
     const fn = window.Views[view];
-    if(fn) fn();
-    // focus cleanup when leaving
+    if(fn){ try { fn(); } catch(e){ console.error(e); const m=document.getElementById('main'); if(m) m.innerHTML = '<div class="card"><h2>⚠️ Fehler</h2><p class="muted">'+String(e.message||e)+'</p><button class="btn primary" onclick="location.reload()">Neu laden</button></div>'; } }
     if(view!=='focus' && window._focusTimer){ clearInterval(window._focusTimer); window._focusTimer=null; }
   }
   window.App = { navigate };
@@ -36,6 +42,12 @@
     // ambient restore
     const amb = Store.get().settings.ambient;
     if(amb && amb!=='none') AudioFX.startAmbient(amb);
+    // cookie consent banner
+    const consent = localStorage.getItem('ff_cookie_consent');
+    const banner = document.getElementById('cookieBanner');
+    if(!consent && banner){ banner.style.display='flex'; }
+    document.getElementById('cookieAccept')?.addEventListener('click', ()=>{ localStorage.setItem('ff_cookie_consent','accepted'); banner.style.display='none'; toast('✅'); });
+    document.getElementById('cookieDecline')?.addEventListener('click', ()=>{ localStorage.setItem('ff_cookie_consent','declined'); banner.style.display='none'; toast('Hinweis: Daten werden nicht gespeichert.'); });
     // initial
     const st = Store.get();
     navigate(st.onboarded ? 'home' : 'onboarding');
