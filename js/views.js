@@ -143,7 +143,12 @@
         </div>
 
         <div class="card quote-card">
-          <blockquote data-i18n="home.quote">„Der beste Zeitpunkt war gestern. Der zweitbeste ist jetzt."</blockquote>
+          <blockquote id="dailyQuote"></blockquote>
+        </div>
+        <div class="card challenge-card">
+          <h3>🎯 ${t('home.quick')} – Tages-Challenge</h3>
+          <p id="dailyChallenge" class="muted"></p>
+          <button class="btn primary small" id="challengeBtn">Annehmen</button>
         </div>
 
         <div class="card honest-card">
@@ -165,6 +170,40 @@
     document.getElementById('homeStartFocus')?.addEventListener('click', ()=>{ AudioFX.click(); startFocus(one?'nextaction':'fivemin', one); });
     document.getElementById('homeMarkDone')?.addEventListener('click', ()=>{ if(one){ markTaskDone(one.id); } });
     document.getElementById('homeAddTask')?.addEventListener('click', ()=>{ App.navigate('tasks'); });
+    // daily quote rotation
+    const quotes = (Store.get('lang')==='en') ? [
+      'The best time was yesterday. The second best is now.',
+      'You do not have to be great to start, but you have to start to be great.',
+      'Small steps every day beat big leaps once a month.',
+      'Done is better than perfect.',
+      'Focus on the next 5 minutes, not the whole mountain.',
+      'Your future self will thank you for starting today.'
+    ] : [
+      'Der beste Zeitpunkt war gestern. Der zweitbeste ist jetzt.',
+      'Du musst nicht großartig sein, um zu beginnen – aber beginnen, um großartig zu werden.',
+      'Kleine Schritte jeden Tag schlagen große Sprünge einmal im Monat.',
+      'Fertig ist besser als perfekt.',
+      'Konzentriere dich auf die nächsten 5 Minuten, nicht auf den ganzen Berg.',
+      'Dein zukünftiges Ich wird es dir danken, dass du heute begonnen hast.'
+    ];
+    const q = quotes[new Date().getDate() % quotes.length];
+    const qEl = document.getElementById('dailyQuote'); if(qEl) qEl.textContent = '„'+q+'“';
+    const challenges = (Store.get('lang')==='en') ? [
+      'Complete one 5-minute focus session.',
+      'Add one task with a tiny next step.',
+      'Log one win today.',
+      'Do your hardest task first (eat the frog).',
+      'Park 3 distractions instead of chasing them.'
+    ] : [
+      'Schließe eine 5-Minuten-Fokus-Session ab.',
+      'Füge eine Aufgabe mit winzigem nächsten Schritt hinzu.',
+      'Logge heute einen Win.',
+      'Erledige zuerst deine schwerste Aufgabe (Eat the Frog).',
+      'Parke 3 Ablenkungen statt ihnen nachzujagen.'
+    ];
+    const ch = challenges[new Date().getDate() % challenges.length];
+    const chEl = document.getElementById('dailyChallenge'); if(chEl) chEl.textContent = ch;
+    document.getElementById('challengeBtn')?.addEventListener('click', ()=>{ Store.update(s=>{ s.wins.push({id:Date.now(), text:'Challenge: '+ch, date:new Date().toISOString()}); }); AudioFX.success(); Confetti.burst(); toast('🎯'); });
     document.querySelectorAll('.quick-btn').forEach(b=> b.addEventListener('click', ()=>{ AudioFX.click(); startFocus(b.dataset.method, one); }));
     // mood/energy (store last)
     let moodVal=null, energyVal=null;
@@ -371,6 +410,7 @@
           </div>
 
           <div class="card focus-timer-card">
+            <div class="companion" id="companion">${esc(Store.get().user.emoji||'🦊')}</div>
             <div class="method-banner" id="methodBanner">${window.methodById(focusMethod).icon} ${esc(methodName(window.methodById(focusMethod)))}</div>
             <div class="breathe" id="breathe">${t('focus.breathe')}</div>
             <div class="timer-ring">
@@ -505,9 +545,8 @@
     checkBadges();
     AudioFX.success(); Confetti.burst();
     toast(t('focus.completed'));
-    // ask mood after
-    setTimeout(()=>{ const val = prompt(t('focus.mood.after')+ ' (1-5)?'); if(val){ const n=+val; if(n>=1&&n<=5){ Store.update(s=>{ const last=s.sessions[s.sessions.length-1]; if(last) last.moodAfter=n; }); } } }, 300);
     App.navigate('insights');
+    setTimeout(()=> showMoodModal(), 400);
   }
   function updateStreak(s){
     const today = todayKey();
@@ -738,6 +777,30 @@
     }
   }
 
+  // ---------- Mood modal ----------
+  function showMoodModal(){
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.innerHTML = `
+      <div class="modal">
+        <h3>${esc(t('focus.mood.after'))}</h3>
+        <div class="emoji-scale" style="justify-content:center;margin:12px 0">
+          ${['😫','😕','😐','🙂','😄'].map((e,i)=>`<button class="scale-btn moodpick" data-val="${i+1}">${e}</button>`).join('')}
+        </div>
+        <button class="btn ghost" id="moodSkip">${t('common.skip')}</button>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.querySelectorAll('.moodpick').forEach(b=> b.addEventListener('click', ()=>{
+      const n = +b.dataset.val;
+      Store.update(s=>{ const last=s.sessions[s.sessions.length-1]; if(last) last.moodAfter=n; s.xp += 2; recalcLevel(s); });
+      overlay.remove();
+      toast('💙');
+    }));
+    document.getElementById('moodSkip').addEventListener('click', ()=> overlay.remove());
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) overlay.remove(); });
+  }
+
+  window.showMoodModal = showMoodModal;
   // ---------- exports ----------
   window.Views = { onboarding, home, methods, tasks, focus, insights, settings };
 
