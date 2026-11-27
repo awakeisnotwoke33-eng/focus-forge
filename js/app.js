@@ -35,6 +35,9 @@
         b.title = 'Freischaltung nach 3 Sessions oder 3 Tagen';
       } else { b.title=''; }
     });
+    document.querySelectorAll('.dropdown-item[data-view]').forEach(b=> {
+      b.classList.toggle('active', b.dataset.view===view);
+    });
     if(locked && view!=='onboarding'){ view='onboarding'; currentView=view; }
     if(featureLocked){ view='home'; currentView=view; toast('🌱 Mindset wird nach 3 Sessions oder 3 Tagen freigeschaltet.'); }
     const fn = window.Views[view];

@@ -933,7 +933,34 @@
   function diary(){
     const st = Store.get();
     const today = todayKey();
-    // build a unified timeline grouped by date
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('de-DE', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+    const timeStr = now.toLocaleTimeString('de-DE', { hour:'2-digit', minute:'2-digit' });
+    // mood options (WhatsApp-style feelings/properties)
+    const moods = [
+      {e:'😄',l:'Freude'},{e:'😊',l:'Zufrieden'},{e:'😌',l:'Entspannt'},{e:'😍',l:'Verliebt'},{e:'🤩',l:'Begeistert'},{e:'😎',l:'Cool'},{e:'🥰',l:'Dankbar'},{e:'😇',l:'Friedlich'},{e:'🙏',l:'Demütig'},{e:'💪',l:'Stolz'},
+      {e:'😔',l:'Traurig'},{e:'😢',l:'Niedergeschlagen'},{e:'😟',l:'Besorgt'},{e:'😰',l:'Ängstlich'},{e:'😤',l:'Frustriert'},{e:'😠',l:'Wütend'},{e:'😒',l:'Genervt'},{e:'🤯',l:'Überfordert'},{e:'😴',l:'Müde'},{e:'🥱',l:'Erschöpft'},
+      {e:'🤔',l:'Nachdenklich'},{e:'😐',l:'Neutral'},{e:'😶',l:'Leer'},{e:'🫠',l:'Schmelzend'},{e:'🤪',l:'Verrückt'},{e:'🥳',l:'Feiernd'},{e:'🫶',l:'Geliebt'},{e:'😮',l:'Überrascht'},{e:'🤫',l:'Still'},{e:'🌅',l:'Hoffnungsvoll'}
+    ];
+    const todayEntry = (st.journal||[]).find(j=>j.date===today);
+    const selectedMood = todayEntry ? todayEntry.mood : null;
+    // calendar (current month)
+    const y = now.getFullYear(), m = now.getMonth();
+    const firstDay = new Date(y, m, 1);
+    const lastDay = new Date(y, m+1, 0).getDate();
+    // monday-first offset
+    let startOffset = (firstDay.getDay()+6)%7;
+    const entryDays = new Set();
+    (st.journal||[]).forEach(j=>{ if(j.date && j.date.startsWith(`${y}-${String(m+1).padStart(2,'0')}`)) entryDays.add(+j.date.slice(-2)); });
+    (st.gratitude||[]).forEach(g=>{ if(g.date && g.date.startsWith(`${y}-${String(m+1).padStart(2,'0')}`)) entryDays.add(+g.date.slice(-2)); });
+    let calCells = '';
+    for(let i=0;i<startOffset;i++) calCells += '<div class="cal-cell empty"></div>';
+    for(let d=1; d<=lastDay; d++){
+      const isToday = d===now.getDate();
+      const hasEntry = entryDays.has(d);
+      calCells += `<div class="cal-cell ${isToday?'today':''} ${hasEntry?'has-entry':''}">${d}</div>`;
+    }
+    // unified timeline
     const dates = new Set();
     (st.gratitude||[]).forEach(g=>dates.add(g.date));
     (st.journal||[]).forEach(j=>dates.add(j.date));
@@ -946,15 +973,27 @@
           <h1>📓 Tagebuch</h1>
           <p class="muted">Mehr als ein Tagebuch: Dankbarkeit, Wins, Sessions und freie Gedanken an einem Ort.</p>
         </div>
+        <div class="card diary-header-card">
+          <div class="diary-date">Heute ist der ${esc(dateStr)}</div>
+          <div class="diary-time">🕐 ${esc(timeStr)} Uhr</div>
+          <div class="calendar">
+            <div class="cal-title">${now.toLocaleDateString('de-DE',{month:'long',year:'numeric'})}</div>
+            <div class="cal-grid">
+              <div class="cal-hdr">Mo</div><div class="cal-hdr">Di</div><div class="cal-hdr">Mi</div><div class="cal-hdr">Do</div><div class="cal-hdr">Fr</div><div class="cal-hdr">Sa</div><div class="cal-hdr">So</div>
+              ${calCells}
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Wie fühlst du dich? (${moods.length} Lagen)</h3>
+          <div class="mood-grid">
+            ${moods.map((mo,i)=>`<button class="mood-tile ${selectedMood===mo.e?'selected':''}" data-mood="${esc(mo.e)}" title="${esc(mo.l)}">${mo.e}<span class="mood-label">${esc(mo.l)}</span></button>`).join('')}
+          </div>
+        </div>
         <div class="card">
           <h3>Heutiger Eintrag</h3>
           <textarea id="journalText" rows="3" placeholder="Was beschäftigt dich heute?">${esc((st.journal||[]).find(j=>j.date===today)?.text||'')}</textarea>
-          <div class="row" style="margin-top:8px">
-            <select id="journalMood">
-              ${['😫','😕','😐','🙂','😄'].map((e,i)=>`<option value="${i+1}" ${((st.journal||[]).find(j=>j.date===today)?.mood===(i+1))?'selected':''}>${e}</option>`).join('')}
-            </select>
-            <button class="btn primary small" id="saveJournal">Speichern</button>
-          </div>
+          <button class="btn primary" id="saveJournal" style="margin-top:12px">Speichern</button>
         </div>
         ${sortedDates.map(d=>{
           const g = (st.gratitude||[]).find(x=>x.date===d);
@@ -965,7 +1004,7 @@
           return `
           <div class="card diary-day">
             <h3>${d}${d===today?' (heute)':''}</h3>
-            ${j?`<p class="diary-text">${esc(j.text)} <span class="muted small">${['','😫','😕','😐','🙂','😄'][j.mood]||''}</span></p>`:''}
+            ${j?`<p class="diary-text">${j.mood?`<span class="mood-emoji">${esc(j.mood)}</span> `:''}${esc(j.text)}</p>`:''}
             ${g?`<div class="muted small">💙 Dankbar: ${g.items.map(esc).join(', ')}</div>`:''}
             ${dayWins.length?`<div class="muted small">🏆 ${dayWins.map(w=>esc(w.text)).join(' · ')}</div>`:''}
             ${daySessions.length?`<div class="muted small">🎯 ${daySessions.length} Sessions · ${dayMin} Min</div>`:''}
@@ -973,13 +1012,21 @@
         }).join('') || '<div class="empty muted">Noch keine Einträge. Fang heute an.</div>'}
       </section>
     `);
+    // mood selection state
+    let chosenMood = selectedMood;
+    document.querySelectorAll('.mood-tile').forEach(b=>{
+      b.addEventListener('click', ()=>{
+        document.querySelectorAll('.mood-tile').forEach(x=>x.classList.remove('selected'));
+        b.classList.add('selected');
+        chosenMood = b.dataset.mood;
+      });
+    });
     document.getElementById('saveJournal')?.addEventListener('click', ()=>{
       const text = document.getElementById('journalText').value.trim();
-      const mood = +document.getElementById('journalMood').value;
       Store.update(s=>{
         if(!s.journal) s.journal=[];
         s.journal = s.journal.filter(j=>j.date!==today);
-        if(text) s.journal.push({date:today, text, mood});
+        if(text || chosenMood) s.journal.push({date:today, text, mood: chosenMood});
         s.xp += 2; recalcLevel(s);
       });
       AudioFX.success();
