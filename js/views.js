@@ -168,6 +168,12 @@
           </div>`;
         })()}
 
+        <div class="card" style="background:linear-gradient(135deg,#1a1a3e,var(--card));border-color:#8b5cf6">
+          <h3>🌀 Gateway Experience entdecken</h3>
+          <p class="muted small">Robert Monroe's Hemi-Sync® – das Tor zu erweiterten Bewusstseinszuständen. Kostenlos auf YouTube (Waves 1–8).</p>
+          <button class="btn primary small" onclick="App.navigate('gateway')" style="margin-top:8px">Zum Gateway →</button>
+        </div>
+
         <div class="stats-grid">
           <div class="stat-card"><div class="stat-val" id="streakVal">${st.streak.current}</div><div class="stat-label" data-i18n="home.streak">Streak</div></div>
           <div class="stat-card"><div class="stat-val">${todayMin}</div><div class="stat-label" data-i18n="home.focusTime">Fokuszeit heute</div></div>
@@ -1118,6 +1124,87 @@
     }));
   }
 
+  // ---------- Gateway view ----------
+  function gateway(){
+    const ytPlaylist = 'https://www.youtube.com/playlist?list=PLP64-L2Fx7UHRO09LBdgCc4VvDKEdCWqg';
+    const ytChannel = 'https://www.youtube.com/@Hemi-Sync';
+    html(`
+      <section class="view gateway">
+        <div class="hero">
+          <h1>🌀 Gateway Experience</h1>
+          <p class="muted">Das Tor zu erweiterten Bewusstseinszuständen. Robert Monroe's Hemi-Sync® – ein Audio-Programm, das beide Gehirnhälften synchronisiert und dich in fokussierte Bewusstseinszustände führt.</p>
+        </div>
+
+        <div class="card" style="text-align:center">
+          <h3>🎧 Alle Waves & Sessions (komplett)</h3>
+          <p class="muted small" style="margin-bottom:12px">Wave I–VIII der Gateway Experience, kostenlos auf YouTube. Kopfhörer empfohlen (Stereo = Hemi-Sync®).</p>
+          <a href="${ytPlaylist}" target="_blank" rel="noopener" class="btn primary big" style="display:inline-block;text-decoration:none">▶️ Playlist öffnen (Waves 1–8)</a>
+          <p class="muted small" style="margin-top:10px">Channel: <a href="${ytChannel}" target="_blank" rel="noopener" style="color:var(--accent)">@Hemi-Sync</a></p>
+        </div>
+
+        <div class="card">
+          <h3>Was ist die Gateway Experience?</h3>
+          <p>Robert Monroe (1915–1995) entdeckte, dass bestimmte Schallfrequenzen (Hemi-Sync®) die linke und rechte Gehirnhälfte synchronisieren können. Das Ergebnis: ein Zustand, in dem der Verstand wach und alert ist, während der Körper tief entspannt ist.</p>
+          <p style="margin-top:8px">Die Gateway Experience ist ein 8-Wave-Programm, das dich Schritt für Schritt durch "Focus Levels" führt:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li><strong>Focus 10</strong> – Körper schläft, Geist wach</li>
+            <li><strong>Focus 12</strong> – Erweiterte Wahrnehmung, innere Bilder</li>
+            <li><strong>Focus 15</strong> – "No Time" – jenseits linearer Zeit</li>
+            <li><strong>Focus 21</strong> – "Other Energy Systems" – Begegnung mit nicht-physischen Bewusstseinsformen</li>
+            <li><strong>Focus 23/25/27</strong> – Jenseits des Physischen (für Fortgeschrittene)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🌀 Die Parallele zu Magie</h3>
+          <p>Magie – in ihrem ursprünglichsten Sinn – ist nicht Hokuspokus. Sie ist die <strong>bewusste Anwendung von Aufmerksamkeit und Intention</strong>, um die Realität zu gestalten. Genau das trainiert die Gateway Experience:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li><strong>Intention als Kraft:</strong> Jede Session beginnt mit einer klaren Absicht. Fokus + Intention = Wirkung.</li>
+            <li><strong>Bewusstsein als Werkzeug:</strong> Wenn der Körper schläft und der Geist wach ist, hast du Zugang zu Ebenen, die im Wachzustand verschlossen sind.</li>
+            <li><strong>Resonanz:</strong> Wie ein Instrument, das in Schwingung versetzt wird, kann auch Bewusstsein in Resonanz mit anderen Systemen treten.</li>
+            <li><strong>Kindliches Bewusstsein:</strong> Kinder glauben noch an Magie, weil sie noch nicht gelernt haben, dass "es nicht funktioniert". Die Gateway Experience bringt dich zurück in diesen Zustand – offen, neugierig, ohne limitierende Überzeugungen.</li>
+          </ul>
+          <p style="margin-top:8px" class="muted small">"The only difference between a magician and a scientist is that the magician knows that his thoughts affect reality." – Robert Monroe (sinngemäß)</p>
+        </div>
+
+        <div class="card">
+          <h3>👶 Das kindliche Bewusstsein</h3>
+          <p>Kinder sind natural in einem Zustand, den die Gateway Experience wiederherstellt:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li><strong>Staunen:</strong> Alles ist neu, alles ist möglich.</li>
+            <li><strong>Präsenz:</strong> Keine Sorgen über gestern oder morgen – nur der Moment.</li>
+            <li><strong>Vertrauen:</strong> Das Universum ist freundlich, nicht feindlich.</li>
+            <li><strong>Playfulness:</strong> Lernen durch Spiel, nicht durch Zwang.</li>
+          </ul>
+          <p style="margin-top:8px">Die Gateway Experience ist wie ein Rückflug in diesen Zustand – aber mit dem Verstand eines Erwachsenen. Du behältst deine Klarheit und gewinnst die Offenheit zurück.</p>
+        </div>
+
+        <div class="card">
+          <h3>💡 Tipps für den Einstieg</h3>
+          <ul class="health-ex-list">
+            <li>Kopfhörer (Stereo) sind Pflicht – Hemi-Sync® braucht getrennte Kanäle.</li>
+            <li>Bequem liegen oder sitzen, Augen schließen.</li>
+            <li>Nicht beim ersten Mal erwarten, dass "etwas passiert" – es ist ein Training.</li>
+            <li>Wave I (Discovery) zuerst – nicht überspringen.</li>
+            <li>Nach jeder Session kurz notieren, was du erlebt hast (Tagebuch!).</li>
+            <li>Regelmäßigkeit > Intensität. 20 Min. täglich schlägt 2 Std. einmal im Monat.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🔗 Verbindung zu FocusForge</h3>
+          <p>Die Gateway Experience ergänzt FocusForge perfekt:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li><strong>Fokus-Sessions</strong> trainieren den gleichen "wachen Geist, entspannter Körper"-Zustand.</li>
+            <li><strong>Dankbarkeits-Journal</strong> im Tagebuch spiegelt die "What Went Well"-Übung aus der positiven Psychologie wider.</li>
+            <li><strong>Identitäts-Narrativ</strong> ("Du bist jemand, der anfängt") stärkt das kindliche Vertrauen in sich selbst.</li>
+            <li><strong>Atem-Anker</strong> (Box Breathing) ist ein Mini-Gateway in den Körper.</li>
+          </ul>
+        </div>
+      </section>
+    `);
+  }
+
   // ---------- Mood modal ----------
   function showMoodModal(){
     const overlay = document.createElement('div');
@@ -1143,7 +1230,7 @@
 
   window.showMoodModal = showMoodModal;
   // ---------- exports ----------
-  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary, health };
+  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary, health, gateway };
 
   // helpers
   function toast(msg){
