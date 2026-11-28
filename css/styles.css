@@ -158,6 +158,11 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
 .health-ex-list{list-style:none;display:flex;flex-direction:column;gap:6px}
 .health-ex-list li{background:var(--bg2);padding:8px 10px;border-radius:8px;font-size:13px}
 .health-ex-list input{width:auto;margin-right:8px}
+.alchemy-stages{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.stage{display:flex;gap:12px;align-items:flex-start;background:var(--bg2);padding:12px;border-radius:var(--radius-sm)}
+.stage-icon{font-size:24px;flex-shrink:0}
+.stage-name{font-weight:700;font-size:14px;margin-bottom:4px}
+.stage-desc{font-size:12px;color:var(--muted)}
 .diary-day{border-left:3px solid var(--accent)}
 .diary-text{margin:6px 0;font-size:14px}
 .diary-header-card{text-align:center}

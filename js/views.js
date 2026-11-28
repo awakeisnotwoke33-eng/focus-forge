@@ -174,6 +174,18 @@
           <button class="btn primary small" onclick="App.navigate('gateway')" style="margin-top:8px">Zum Gateway →</button>
         </div>
 
+        <div class="card" style="background:linear-gradient(135deg,#2a2a2a,var(--card));border-color:#6b7280">
+          <h3>🌑 Schattenarbeit</h3>
+          <p class="muted small">Carl Jung: "Man wird nicht erleuchtet, indem man sich Lichtgestalten vorstellt, sondern indem man die Dunkelheit bewusst macht." Integration statt Unterdrückung.</p>
+          <button class="btn primary small" onclick="App.navigate('shadow')" style="margin-top:8px">Zur Schattenarbeit →</button>
+        </div>
+
+        <div class="card" style="background:linear-gradient(135deg,#3a2a1a,var(--card));border-color:#f59e0b">
+          <h3>⚗️ Wahre Alchemie</h3>
+          <p class="muted small">Nigredo → Albedo → Citrinitas → Rubedo. Dein "Blei" wird zu Gold, wenn du es durchschreitest, nicht umgehst.</p>
+          <button class="btn primary small" onclick="App.navigate('alchemy')" style="margin-top:8px">Zur Alchemie →</button>
+        </div>
+
         <div class="stats-grid">
           <div class="stat-card"><div class="stat-val" id="streakVal">${st.streak.current}</div><div class="stat-label" data-i18n="home.streak">Streak</div></div>
           <div class="stat-card"><div class="stat-val">${todayMin}</div><div class="stat-label" data-i18n="home.focusTime">Fokuszeit heute</div></div>
@@ -1205,6 +1217,211 @@
     `);
   }
 
+  // ---------- Shadow Work view ----------
+  function shadow(){
+    html(`
+      <section class="view shadow">
+        <div class="hero">
+          <h1>🌑 Schattenarbeit</h1>
+          <p class="muted">Carl Gustav Jung: "Man wird nicht erleuchtet, indem man sich Lichtgestalten vorstellt, sondern indem man die Dunkelheit bewusst macht."</p>
+        </div>
+
+        <div class="card">
+          <h3>Was ist der Schatten?</h3>
+          <p>Der Schatten ist der Teil deiner Persönlichkeit, den du nicht sein willst. Alles, was du verdrängst, leugnest oder ablehnst – Wut, Neid, Angst, Triebe, aber auch Kreativität, Macht und Lebendigkeit. Er ist nicht dein Feind. Er ist der <strong>Hüter deiner Ganzheit</strong>.</p>
+          <p style="margin-top:8px" class="muted small">"Gott finden, indem man den Schatten integriert – nicht auf Knien eine Lichtgestalt anbetet." Der wahre Weg zur Ganzheit führt durch die Dunkelheit, nicht um sie herum.</p>
+        </div>
+
+        <div class="card">
+          <h3>Der Schatten enthält Gold</h3>
+          <p>Nicht alles im Schatten ist "schlecht". Oft verbergen sich dort:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li><strong>Verborgene Talente:</strong> Fähigkeiten, die du dir nie erlaubt hast zu zeigen.</li>
+            <li><strong>Kreativität:</strong> Der "wilde" Teil, der nicht in Formen passt.</li>
+            <li><strong>Macht & Stärke:</strong> Energie, die du als "zu viel" oder "zu gefährlich" abtust.</li>
+            <li><strong>Vulnerabilität:</strong> Die Weichheit, die du als Schwäche versteckst.</li>
+            <li><strong>Sexualität:</strong> Lebensenergie, die oft tabuisiert wird.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Schatten vs. Spirituelles Bypassing</h3>
+          <p>"Spirituelles Bypassing" bedeutet: die Dunkelheit überspringen und nur das Licht suchen. Meditation, Positivität und "gute Vibes" als Flucht vor dem Schmerz. Das funktioniert nicht – der Schatten wartet immer.</p>
+          <p style="margin-top:8px"><strong>Integration statt Bypassing:</strong> Den Schatten nicht bekämpfen, sondern kennenlernen. Ihn fragen: "Was willst du mir sagen?" Dann akzeptieren, nicht verurteilen.</p>
+        </div>
+
+        <div class="card">
+          <h3>Techniken der Schattenarbeit</h3>
+          <ul class="health-ex-list">
+            <li><strong>Trigger-Journaling:</strong> Was triggert dich stark? Schreibe es auf. Der Trigger zeigt auf einen Schattenanteil.</li>
+            <li><strong>Dialog:</strong> Schreibe einen Dialog mit deinem Schatten. "Wer bist du? Was willst du?"</li>
+            <li><strong>Projektion zurückholen:</strong> Was stört dich an anderen? Das ist oft dein eigener Schatten, projiziert nach außen.</li>
+            <li><strong>Akzeptanz-Übung:</strong> "Ich erlaube mir, [Eigenschaft] zu sein." Ohne "aber".</li>
+            <li><strong>Schatten-Meditation:</strong> Schließe die Augen. Stell dir deinen Schatten als Person vor. Was sagt er/sie?</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Der Prozess: 4 Schritte</h3>
+          <ol class="health-ex-list">
+            <li><strong>Erkennen:</strong> Was verdränge ich? Wo reagiere ich übermäßig?</li>
+            <li><strong>Akzeptieren:</strong> "Das bin auch ich." Ohne Urteil.</li>
+            <li><strong>Verstehen:</strong> Warum habe ich das verdrängt? Was hat es mir geschützt?</li>
+            <li><strong>Integrieren:</strong> Den Schattenanteil als Teil von mir annehmen. Nicht eliminieren – integrieren.</li>
+          </ol>
+        </div>
+
+        <div class="card">
+          <h3>🌑 Schatten-Journal (heute)</h3>
+          <p class="muted small">Was hat dich heute getriggert? Was hast du verdrängt? Schreibe es auf – ohne Urteil.</p>
+          <textarea id="shadowText" rows="4" placeholder="Heute hat mich ... getriggert, weil ..."></textarea>
+          <button class="btn primary" id="saveShadow" style="margin-top:12px">Speichern</button>
+          <div id="shadowHistory" style="margin-top:12px"></div>
+        </div>
+
+        <div class="card">
+          <h3>🔗 Verbindung zu FocusForge</h3>
+          <ul class="health-ex-list">
+            <li><strong>Tagebuch:</strong> Schatten-Einträge im Tagebuch festhalten – Muster erkennen.</li>
+            <li><strong>Methoden:</strong> "Permission Slip" und "Done > Perfect" sind Schattenarbeit – Perfektionismus ist oft maskierte Angst.</li>
+            <li><strong>Gateway:</strong> Die Gateway Experience führt dich in Zustände, in denen der Schatten zugänglich wird.</li>
+            <li><strong>Identität:</strong> "Du bist jemand, der anfängt" – auch mit seinen Schatten.</li>
+          </ul>
+        </div>
+      </section>
+    `);
+    // load shadow history
+    const sh = (Store.get().shadow||[]);
+    const histEl = document.getElementById('shadowHistory');
+    if(histEl && sh.length){
+      histEl.innerHTML = '<h4 style="margin-bottom:6px">Letzte Einträge</h4>' + sh.slice(-5).reverse().map(s=>`<div class="muted small" style="background:var(--bg2);padding:8px;border-radius:8px;margin-bottom:4px"><strong>${s.date}</strong>: ${esc(s.text)}</div>`).join('');
+    }
+    document.getElementById('saveShadow')?.addEventListener('click', ()=>{
+      const text = document.getElementById('shadowText').value.trim();
+      if(!text){ toast('⚠️'); return; }
+      Store.update(s=>{
+        if(!s.shadow) s.shadow=[];
+        s.shadow.push({date:todayKey(), text});
+        s.xp += 5; recalcLevel(s);
+        s.wins.push({id:Date.now(), text:'Schattenarbeit geloggt', date:new Date().toISOString()});
+      });
+      AudioFX.success(); Confetti.burst();
+      toast('🌑 Gespeichert');
+      shadow();
+    });
+  }
+
+  // ---------- True Alchemy view ----------
+  function alchemy(){
+    html(`
+      <section class="view alchemy">
+        <div class="hero">
+          <h1>⚗️ Wahre Alchemie</h1>
+          <p class="muted">Alchemie ist keine Blei-zu-Gold-Magie. Sie ist innere Transformation: das Rohe wird zum Kostbaren, nicht durch Flucht, sondern durch Durchschreiten.</p>
+        </div>
+
+        <div class="card">
+          <h3>Was ist "Wahre" Alchemie?</h3>
+          <p>Die historische Alchemie suchte nach dem Stein der Weisen – der Substanz, die Blei zu Gold verwandelt. Carl Jung interpretierte die Alchemie als <strong>Symbol des Individuationsprozesses</strong>: die Transformation des Unbewussten in Bewusstsein, des Rohesten in das Kostbarste.</p>
+          <p style="margin-top:8px">Dein "Blei" – deine Ängste, Schmerzen, negativen Muster – wird nicht durch Wegzaubern zu Gold. Es wird Gold, wenn du es <strong>durchschreitest</strong>, verstehst und integrierst.</p>
+        </div>
+
+        <div class="card">
+          <h3>Die 4 Stufen der Alchemie</h3>
+          <div class="alchemy-stages">
+            <div class="stage">
+              <div class="stage-icon">⬛</div>
+              <div class="stage-name">Nigredo – Die Schwärzung</div>
+              <div class="stage-desc">Die Dunkelheit. Depression, Verlust, Konfrontation mit dem Schatten. Die "prima materia" – das rohe Material, das transformiert werden muss. Nicht überspringen!</div>
+            </div>
+            <div class="stage">
+              <div class="stage-icon">⬜</div>
+              <div class="stage-name">Albedo – Die Weiße</div>
+              <div class="stage-desc">Klarheit. Die Dunkelheit wird bewusst. Reinigung, Verstehen, erste Einsichten. Das Blei beginnt zu glänzen.</div>
+            </div>
+            <div class="stage">
+              <div class="stage-icon">🟡</div>
+              <div class="stage-name">Citrinitas – Die Gelbwerdung</div>
+              <div class="stage-desc">Erwachen. Weisheit, Intuition, Zugang zu tieferen Ebenen. Die Sonne geht auf – Erkenntnis wird lebendig.</div>
+            </div>
+            <div class="stage">
+              <div class="stage-icon">🔴</div>
+              <div class="stage-name">Rubedo – Die Rötung (Vollendung)</div>
+              <div class="stage-desc">Integration. Ganzheit. Der Stein der Weisen – nicht als Objekt, sondern als Zustand. Du bist, was du suchtest.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Prima Materia – Dein Rohstoff</h3>
+          <p>Die Alchemisten suchten nach der "prima materia" – der ersten Substanz, aus der alles entsteht. Jung identifizierte sie mit dem <strong>Unbewussten</strong>, besonders dem Schatten. Dein "Blei" ist:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li>Deine stärksten Ängste und Unsicherheiten</li>
+            <li>Deine verdrängten Triebe und Wünsche</li>
+            <li>Deine schmerzhaftesten Erfahrungen</li>
+            <li>Deine "negativen" Eigenschaften (die du nicht sein willst)</li>
+          </ul>
+          <p style="margin-top:8px" class="muted small">Genau diese Dinge sind der Rohstoff für deine Transformation. Ohne sie kein Gold.</p>
+        </div>
+
+        <div class="card">
+          <h3>Transmutations-Übung</h3>
+          <p class="muted small">Identifiziere dein "Blei" und transformiere es:</p>
+          <div class="field">
+            <label>Mein "Blei" (negatives Muster, Angst, Schmerz):</label>
+            <input id="alchemyLead" type="text" placeholder="z.B. Angst vor Ablehnung" />
+          </div>
+          <div class="field">
+            <label>Was ist das dahinterliegende "Gold" (Stärke, Bedürfnis, Wahrheit)?</label>
+            <input id="alchemyGold" type="text" placeholder="z.B. Der Wunsch nach Verbindung" />
+          </div>
+          <button class="btn primary" id="saveAlchemy" style="margin-top:8px">Transmutation loggen</button>
+          <div id="alchemyHistory" style="margin-top:12px"></div>
+        </div>
+
+        <div class="card">
+          <h3>Die Alchemie des Alltags</h3>
+          <p>Alchemie passiert nicht nur in Meditation. Sie passiert, wenn:</p>
+          <ul class="health-ex-list" style="margin-top:8px">
+            <li>Du einen Fehler machst und daraus lernst (Nigredo → Albedo)</li>
+            <li>Du einen Konflikt führst und danach klarer bist (Albedo → Citrinitas)</li>
+            <li>Du aus einem Verlust etwas Wertvolles gewinnst (Citrinitas → Rubedo)</li>
+            <li>Du deine Angst nutzt, um mutiger zu werden (Blei → Gold)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🔗 Verbindung zu FocusForge</h3>
+          <ul class="health-ex-list">
+            <li><strong>Schattenarbeit:</strong> Die Schattenarbeit ist die Nigredo – die Konfrontation mit der Dunkelheit.</li>
+            <li><strong>Gateway:</strong> Die Gateway Experience ist die Citrinitas – das Erwachen zu tieferen Ebenen.</li>
+            <li><strong>Prokrastination:</strong> Prokrastination ist "Blei" – die Transformation darin ist, die Angst zu durchschreiten.</li>
+            <li><strong>Dankbarkeit:</strong> Dankbarkeit ist die Rubedo – das Gold, das nach der Transformation bleibt.</li>
+          </ul>
+        </div>
+      </section>
+    `);
+    const ah = (Store.get().alchemy||[]);
+    const histEl = document.getElementById('alchemyHistory');
+    if(histEl && ah.length){
+      histEl.innerHTML = '<h4 style="margin-bottom:6px">Letzte Transmutationen</h4>' + ah.slice(-5).reverse().map(a=>`<div class="muted small" style="background:var(--bg2);padding:8px;border-radius:8px;margin-bottom:4px"><strong>${a.date}</strong>: ${esc(a.lead)} → ${esc(a.gold)}</div>`).join('');
+    }
+    document.getElementById('saveAlchemy')?.addEventListener('click', ()=>{
+      const lead = document.getElementById('alchemyLead').value.trim();
+      const gold = document.getElementById('alchemyGold').value.trim();
+      if(!lead || !gold){ toast('⚠️'); return; }
+      Store.update(s=>{
+        if(!s.alchemy) s.alchemy=[];
+        s.alchemy.push({date:todayKey(), lead, gold});
+        s.xp += 5; recalcLevel(s);
+        s.wins.push({id:Date.now(), text:'Transmutation: '+lead+'→'+gold, date:new Date().toISOString()});
+      });
+      AudioFX.success(); Confetti.burst();
+      toast('⚗️ Transmutation geloggt');
+      alchemy();
+    });
+  }
+
   // ---------- Mood modal ----------
   function showMoodModal(){
     const overlay = document.createElement('div');
@@ -1230,7 +1447,7 @@
 
   window.showMoodModal = showMoodModal;
   // ---------- exports ----------
-  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary, health, gateway };
+  window.Views = { onboarding, home, methods, tasks, focus, insights, settings, mindset, diary, health, gateway, shadow, alchemy };
 
   // helpers
   function toast(msg){
